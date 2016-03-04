@@ -157,3 +157,77 @@ remote: Verifying deploy.... done.
 To https://git.heroku.com/fast-garden-78997.git
  * [new branch]      master -> master
  ```
+ 
+ ## And now the error
+ 
+ ```console
+$ godep save ./...
+
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   Godeps/Godeps.json
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git diff
+diff --git a/Godeps/Godeps.json b/Godeps/Godeps.json
+index 432aa37..b90e0ce 100644
+--- a/Godeps/Godeps.json
++++ b/Godeps/Godeps.json
+@@ -1,6 +1,9 @@
+ {
+        "ImportPath": "github.com/freeformz/tmgo",
+        "GoVersion": "go1.6",
++       "Packages": [
++               "./..."
++       ],
+        "Deps": [
+                {
+                        "ImportPath": "gopkg.in/mgo.v2",
+
+$ git add Godeps/Godeps.json
+
+$ git commit -am "Maybe"
+[master f69012b] Maybe
+ 1 file changed, 3 insertions(+)
+
+$ git push heroku master
+Counting objects: 7, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 2.06 KiB | 0 bytes/s, done.
+Total 7 (delta 1), reused 0 (delta 0)
+remote: Compressing source files... done.
+remote: Building source:
+remote:
+remote: -----> Using set buildpack heroku/go
+remote: -----> Go app detected
+remote: -----> Checking Godeps/Godeps.json file.
+remote: -----> Using go1.6
+remote: -----> Running: go install -v -tags heroku ./...
+remote: github.com/freeformz/tmgo/vendor/gopkg.in/mgo.v2/bson
+remote: github.com/freeformz/tmgo/vendor/gopkg.in/mgo.v2/internal/scram
+remote: github.com/freeformz/tmgo/vendor/gopkg.in/mgo.v2/internal/sasl
+remote: # github.com/freeformz/tmgo/vendor/gopkg.in/mgo.v2/internal/sasl
+remote: vendor/gopkg.in/mgo.v2/internal/sasl/sasl.go:15:24: fatal error: sasl/sasl.h: No such file or directory
+remote:  // #include <sasl/sasl.h>
+remote:                         ^
+remote: compilation terminated.
+remote: github.com/freeformz/tmgo/vendor/gopkg.in/mgo.v2
+remote: github.com/freeformz/tmgo
+remote:
+remote:  !     Push rejected, failed to compile Go app
+remote:
+remote: Verifying deploy...
+remote:
+remote: !	Push rejected to fast-garden-78997.
+remote:
+To https://git.heroku.com/fast-garden-78997.git
+ ! [remote rejected] master -> master (pre-receive hook declined)
+error: failed to push some refs to 'https://git.heroku.com/fast-garden-78997.git'
+ ```
