@@ -1,6 +1,9 @@
 {
 	"ImportPath": "github.com/freeformz/tmgo",
 	"GoVersion": "go1.6",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
 		{
 			"ImportPath": "gopkg.in/mgo.v2",
